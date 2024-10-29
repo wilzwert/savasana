@@ -87,7 +87,7 @@ describe("AuthService unit tests", () =>  {
        const mockError = new ProgressEvent('error');
        const registerRequest: RegisterRequest = {email: "john.doe@example.com", password: "testpassword", firstName: "John", "lastName": "Doe"};
         service.register(registerRequest).subscribe({
-            next: respone => fail('should have failed with http error'),
+            next: response => fail('should have failed with http error'),
             error: (error: HttpErrorResponse) => {
                 expect(error.error).toBe(mockError);
                 done()
