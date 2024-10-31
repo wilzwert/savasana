@@ -37,7 +37,6 @@ describe('DetailComponent integration tests', () => {
 
   beforeEach(async () => {
     const mockMatSnackBar = { open: jest.fn() };
-    const mockRouter = { navigate: jest.fn(), url: '/sessions' };
     
     await TestBed.configureTestingModule({
       imports: [
@@ -57,8 +56,7 @@ describe('DetailComponent integration tests', () => {
         SessionApiService,
         TeacherService,
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
-        { provide: MatSnackBar, useValue: mockMatSnackBar},
-        { provide: Router, useValue: mockRouter},
+        { provide: MatSnackBar, useValue: mockMatSnackBar}
       ],
     })
       .compileComponents();
