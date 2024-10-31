@@ -7,7 +7,6 @@ import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
 import com.openclassrooms.starterjwt.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,10 +50,10 @@ public class SessionServiceTest {
             Session session = new Session();
             when(sessionRepository.save(any(Session.class))).thenReturn(session);
 
-            Session createSession = sessionService.create(session);
+            Session createdSession = sessionService.create(session);
 
             verify(sessionRepository).save(session);
-            assertNotNull(createSession);
+            assertThat(createdSession).isNotNull().isEqualTo(session);
         }
     }
 
@@ -62,33 +61,34 @@ public class SessionServiceTest {
     class GetSession {
         @Test
         public void shouldFindAllSessions() {
-            when(sessionRepository.findAll()).thenReturn(Arrays.asList(new Session(), new Session()));
+            List<Session> sessions = Arrays.asList(new Session(), new Session());
+            when(sessionRepository.findAll()).thenReturn(sessions);
 
             List<Session> allSessions = sessionService.findAll();
 
             verify(sessionRepository).findAll();
-            assertNotNull(allSessions);
-            assertEquals(2, allSessions.size());
+            assertThat(allSessions).isNotNull().isEqualTo(sessions);
         }
 
         @Test
         public void shouldFindAnExistingSessionByItsId() {
-            when(sessionRepository.findById(anyLong())).thenReturn(Optional.of(new Session()));
+            Session session = new Session();
+            when(sessionRepository.findById(anyLong())).thenReturn(Optional.of(session));
 
-            Session session = sessionService.getById(1L);
+            Session foundSession = sessionService.getById(1L);
 
             verify(sessionRepository).findById(1L);
-            assertNotNull(session);
+            assertThat(foundSession).isNotNull().isEqualTo(session);
         }
 
         @Test
         public void shouldReturnNullIfSessionDoesNotExist() {
             when(sessionRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-            Session session = sessionService.getById(1L);
+            Session foundSession = sessionService.getById(1L);
 
             verify(sessionRepository).findById(1L);
-            assertNull(session);
+            assertThat(foundSession).isNull();
         }
     }
 
@@ -103,8 +103,7 @@ public class SessionServiceTest {
             Session updatedSession = sessionService.update(1L, session);
 
             verify(sessionRepository).save(session);
-            assertNotNull(updatedSession);
-            assertEquals(1L, updatedSession.getId());
+            assertThat(updatedSession).isNotNull().isEqualTo(session);
         }
     }
 
@@ -134,7 +133,7 @@ public class SessionServiceTest {
             sessionService.participate(1L, 1L);
 
             verify(sessionRepository).save(session);
-            assertThat(session.getUsers()).isEqualTo(Arrays.asList(user));
+            assertThat(session.getUsers()).isEqualTo(Collections.singletonList(user));
         }
 
         @Test
