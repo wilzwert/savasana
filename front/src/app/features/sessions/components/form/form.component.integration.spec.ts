@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {  FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -15,11 +14,13 @@ import { SessionApiService } from '../../services/session-api.service';
 import { FormComponent } from './form.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeacherService } from 'src/app/services/teacher.service';
-import { of } from 'rxjs';
 import { Teacher } from 'src/app/interfaces/teacher.interface';
 import { Session } from '../../interfaces/session.interface';
+import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
+import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
+import { ListComponent } from '../list/list.component';
 
-describe('FormComponent', () => {
+describe('FormComponent integration tests', () => {
   const mockTeachers: Teacher[] = [
     { id: 456, firstName: 'Test', lastName: 'Teacher', createdAt: new Date(), updatedAt: new Date() },
     { id: 66, firstName: 'Second', lastName: 'Test-Teacher', createdAt: new Date(), updatedAt: new Date() }
@@ -33,10 +34,15 @@ describe('FormComponent', () => {
     teacher_id: 66,
     users: []
   }
+
+  const mockSessionInformation: SessionInformation = { id: 66, admin: true } as SessionInformation;
   
   const imports = [
-    RouterTestingModule,
-    HttpClientModule,
+    RouterTestingModule.withRoutes([
+      { path: "sessions/update/:id", component: FormComponent },
+      { path: 'sessions', component: ListComponent }
+    ]),
+    HttpClientTestingModule,
     MatCardModule,
     MatIconModule,
     MatFormFieldModule,
@@ -49,12 +55,15 @@ describe('FormComponent', () => {
   
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
-  let mockRouter: any;
+
+
+  let sessionService: SessionService;
+  let sessionApiService: SessionApiService;
+  let teacherService: TeacherService;
+  let router: Router;
+  let matSnackBar:MatSnackBar;
+  let mockHttpController: HttpTestingController;
   let mockActivatedRoute: any;
-  let mockTeacherService: any;
-  let mockSessionApiService: any;  
-  let mockSessionService: any;  
-  let mockMatSnackBar: any; 
   
   const checkFormGroup = (values: any = {name: '', date: '', teacher_id: '', description: ''}) => {
     expect(component.sessionForm).toBeTruthy();
@@ -86,33 +95,40 @@ describe('FormComponent', () => {
   }
 
   beforeEach(async () => {
-    mockTeacherService = { all: jest.fn().mockReturnValue(of<Teacher[]>(mockTeachers)) };
-    mockSessionApiService = { 
-      detail: jest.fn().mockReturnValue(of(mockSession)),
-      create: jest.fn().mockReturnValue(of({})),
-      update: jest.fn().mockReturnValue(of({}))
-    };
-    mockSessionService = {sessionInformation: { admin: true  }};
-    mockMatSnackBar = {open: jest.fn()};
-    mockRouter = {navigate: jest.fn(), url: '/sessions/create'};
+    const mockMatSnackBar = { open: jest.fn() };
+    // const mockRouter = { navigate: jest.fn(), url: '/sessions', changeUrl: (url: String) => url = url };
+
     mockActivatedRoute = { snapshot: { paramMap: { get: () => '' } } } ;
     
     await TestBed.configureTestingModule({
       imports: imports,
       providers: [
-        { provide: ActivatedRoute, useValue: mockActivatedRoute},
-        { provide: Router, useValue: mockRouter},        
-        { provide: SessionService, useValue: mockSessionService},
-        { provide: TeacherService, useValue: mockTeacherService},
-        { provide: SessionApiService, useValue:  mockSessionApiService},
-        { provide: MatSnackBar, useValue: mockMatSnackBar}
+        SessionService,
+        TeacherService,
+        SessionApiService,
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: MatSnackBar, useValue: mockMatSnackBar},
+        // { provide: Router/*, useValue: mockRouter*/},
       ],
       declarations: [FormComponent]
     })
       .compileComponents();
+
+    sessionService = TestBed.inject(SessionService);
+    sessionService.logIn(mockSessionInformation as SessionInformation);
+    sessionApiService = TestBed.inject(SessionApiService);
+    teacherService =TestBed.inject(TeacherService);
+    matSnackBar = TestBed.inject(MatSnackBar);
+    router = TestBed.inject(Router);
+    mockHttpController = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    // mock http response for Teacher
+    const testRequestTeachers: TestRequest = mockHttpController.expectOne("api/teacher");
+    expect(testRequestTeachers.request.method).toEqual("GET");
+    testRequestTeachers.flush(mockTeachers);
   });
 
   afterEach(() => {
@@ -124,29 +140,18 @@ describe('FormComponent', () => {
   });
 
   it('should redirect to sessions if current user is not admin', () => {
-    mockSessionService.sessionInformation.admin = false;
+    const routerSpy = jest.spyOn(router, 'navigate');
+    const mockSessionInformationNonAdmin: SessionInformation = {id: 123, admin: false} as SessionInformation;
+    sessionService.logIn(mockSessionInformationNonAdmin);
     fixture.detectChanges();
     component.ngOnInit();
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/sessions'])
+    expect(routerSpy).toHaveBeenCalledWith(['/sessions'])
   })
   
-  it('should load teachers on init', (done) => {
-    expect(mockTeacherService.all).toHaveBeenCalledTimes(1);
-    component.teachers$.subscribe((teachers: Teacher[]) => {
-        expect(teachers).toEqual(mockTeachers)
-        done()
-      })
-  })
-
-  it('should build empty form for session creation', () => {
-    expect(mockRouter.url).toBe('/sessions/create');
-    // check that onUpdate is false
-    expect(component.onUpdate).toBe(false);    
-    // check form inputs values 
-    checkFormGroup();
-  })
-
+  
   it('should handle session creation', () => {
+    const routerSpy = jest.spyOn(router, 'navigate');
+
     component.sessionForm = new FormBuilder().group({
       name: ['Test Session', Validators.required],
       date: ['2025-01-01', Validators.required],
@@ -156,46 +161,50 @@ describe('FormComponent', () => {
 
     component.submit();
 
-    expect(mockSessionApiService.create).toHaveBeenCalledTimes(1);
-    expect(mockSessionApiService.create).toHaveBeenCalledWith(component.sessionForm.value as Session);
-    expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session created !', 'Close', { duration: 3000 });
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
-  })
+    // mock http response for successful session creation
+    const testRequestSession: TestRequest = mockHttpController.expectOne("api/session");
+    expect(testRequestSession.request.method).toEqual("POST");
+    expect(testRequestSession.request.body).toEqual(component.sessionForm.value as Session);
+    testRequestSession.flush(null);
 
-  it('should build pre-filled form for session update', () => {
-    mockRouter.url = '/sessions/update/1';
-    mockActivatedRoute.snapshot.paramMap.get = () => '1';
-
-    fixture.detectChanges();
-    component.ngOnInit();
-
-    expect(mockSessionApiService.detail).toHaveBeenCalledTimes(1);
-    expect(mockSessionApiService.detail).toHaveBeenCalledWith("1");
-    expect(component.onUpdate).toBe(true);
-
-    // check form inputs default values
-    checkFormGroup({name: mockSession.name, date: mockSession.date.toISOString().split('T')[0], teacher_id: mockSession.teacher_id, description: mockSession.description});
+    expect(matSnackBar.open).toHaveBeenCalledWith('Session created !', 'Close', { duration: 3000 });
+    expect(routerSpy).toHaveBeenCalledWith(['sessions']);
   })
   
-  it('should handle session update', () => {
-    mockRouter.url = '/sessions/update/1';
-    mockActivatedRoute.snapshot.paramMap.get = () => '1';
 
+  it('should handle session update', async () => {
+    mockActivatedRoute.snapshot.paramMap.get = () => '1';
+    const routerSpy = jest.spyOn(router, 'navigate');
+    await router.navigate(['/sessions/update/1']).then(() => {
+      expect(router.url).toEqual('/sessions/update/1');
+    });
+    // router = TestBed.inject(Router);
+    console.log(router.url);
+    // router.url = '/sessions/update/1';
+    
     fixture.detectChanges();
     component.ngOnInit();
 
-    component.submit();
+     // mock http response for successful session creation
+     const testRequestGetSession: TestRequest = mockHttpController.expectOne("api/session/1");
+     expect(testRequestGetSession.request.method).toEqual("GET");
+     testRequestGetSession.flush(mockSession);
 
+    component.submit();
+    /*
     const expectedFormValues = {
       name: mockSession.name,
       teacher_id: mockSession.teacher_id,
       description: mockSession.description,
       date: mockSession.date.toISOString().split('T')[0]
-    }
-
-    expect(mockSessionApiService.update).toHaveBeenCalledTimes(1);
-    expect(mockSessionApiService.update).toHaveBeenCalledWith("1", expectedFormValues);
-    expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session updated !', 'Close', { duration: 3000 });
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
+    }*/
+    
+    // mock http response for successful session creation
+    const testRequestSession: TestRequest = mockHttpController.expectOne("api/session/1");
+    expect(testRequestSession.request.method).toEqual("PUT");
+    expect(testRequestSession.request.body).toEqual(component.sessionForm?.value as Session);
+    testRequestSession.flush(null);
+    expect(matSnackBar.open).toHaveBeenCalledWith('Session updated !', 'Close', { duration: 3000 });
+    expect(routerSpy).toHaveBeenCalledWith(['sessions']);
   })
 });

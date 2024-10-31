@@ -21,7 +21,8 @@ import { MatIconModule } from '@angular/material/icon';
 describe('DetailComponent', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>; 
-  let service: SessionService;
+  let sessionService: SessionService;
+  let sessionApiService: SessionApiService;
 
   let mockSessionApiService: any;
   let mockTeacherService: any;
@@ -66,7 +67,8 @@ describe('DetailComponent', () => {
     })
       .compileComponents();
     
-    service = TestBed.inject(SessionService);
+    sessionService = TestBed.inject(SessionService);
+    sessionApiService = TestBed.inject(SessionApiService);
     fixture = TestBed.createComponent(DetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();   
@@ -80,7 +82,7 @@ describe('DetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load session detail on init', () => {
+  it('should load session detail on init and set isParticipate to true if participation exists', () => {
     expect(component.sessionId).toBe("1");
     expect(component.userId).toBe(""+mockSessionInformation.id);
     expect(component.isAdmin).toBe(mockSessionInformation.admin);
@@ -94,6 +96,20 @@ describe('DetailComponent', () => {
     expect(component.teacher).toEqual(mockTeacher);
 
     expect(component.isParticipate).toBe(true);
+  })
+
+  it('should load session detail on init and set isParticipate to false if no participation exists', () => {
+    // we have to replace the default implementation of SessionApiService::detail to get a session without the user participation
+    const mockSessionWithoutParticipation = mockSession;
+    mockSessionWithoutParticipation.users = [];
+    const spy = jest.spyOn(sessionApiService, 'detail').mockImplementation(() => of(mockSessionWithoutParticipation));
+    expect(spy).toHaveBeenCalledTimes(1);
+    jest.clearAllMocks();
+    
+    // manually trigger ngOnInit to trigger session fetch
+    component.ngOnInit();
+
+    expect(component.isParticipate).toBe(false);
   })
 
   it('should delete participation', () => {
@@ -136,47 +152,5 @@ describe('DetailComponent', () => {
     component.back();
     expect(spy).toHaveBeenCalled();
   });
-
-
-/*
-public ngOnInit(): void {
-    this.fetchSession();
-  }
-
-  public back() {
-    window.history.back();
-  }
-
-  public delete(): void {
-    this.sessionApiService
-      .delete(this.sessionId)
-      .subscribe((_: any) => {
-          this.matSnackBar.open('Session deleted !', 'Close', { duration: 3000 });
-          this.router.navigate(['sessions']);
-        }
-      );
-  }
-
-  public participate(): void {
-    this.sessionApiService.participate(this.sessionId, this.userId).subscribe(_ => this.fetchSession());
-  }
-
-  public unParticipate(): void {
-    this.sessionApiService.unParticipate(this.sessionId, this.userId).subscribe(_ => this.fetchSession());
-  }
-
-  private fetchSession(): void {
-    this.sessionApiService
-      .detail(this.sessionId)
-      .subscribe((session: Session) => {
-        this.session = session;
-        this.isParticipate = session.users.some(u => u === this.sessionService.sessionInformation!.id);
-        this.teacherService
-          .detail(session.teacher_id.toString())
-          .subscribe((teacher: Teacher) => this.teacher = teacher);
-      });
-  }
-*/
-
 });
 
