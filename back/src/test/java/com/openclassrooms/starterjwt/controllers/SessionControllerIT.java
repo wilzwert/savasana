@@ -75,7 +75,6 @@ public class SessionControllerIT {
         public void shouldReturnBadRequestWhenBadId() throws Exception {
             mockMvc.perform(get("/api/session/badId").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
 
         @Test
@@ -115,7 +114,6 @@ public class SessionControllerIT {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("id").value(session.getId()))
                     .andExpect(jsonPath("name").value(session.getName()));
-            ;
         }
 
         @Test
@@ -125,7 +123,6 @@ public class SessionControllerIT {
 
             mockMvc.perform(get("/api/session/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
-            ;
         }
     }
 
@@ -188,7 +185,6 @@ public class SessionControllerIT {
         public void shouldReturnBadRequestOnUpdateWhenBadId() throws Exception {
             mockMvc.perform(put("/api/session/badId").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
 
         @Test
@@ -198,7 +194,6 @@ public class SessionControllerIT {
 
             mockMvc.perform(put("/api/session/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
 
         @Test
@@ -268,7 +263,6 @@ public class SessionControllerIT {
         public void shouldReturnBadRequestOnDeleteWhenBadId() throws Exception {
             mockMvc.perform(delete("/api/session/badId").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
         @Test
         @WithMockUser(roles = {"ADMIN"})
@@ -277,7 +271,6 @@ public class SessionControllerIT {
 
             mockMvc.perform(delete("/api/session/1").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
-            ;
         }
 
 
@@ -309,7 +302,6 @@ public class SessionControllerIT {
         public void shouldReturnBadRequestOnParticipateWhenBadId() throws Exception {
             mockMvc.perform(post("/api/session/badId/participate/any").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
 
         @Test
@@ -390,7 +382,6 @@ public class SessionControllerIT {
         public void shouldReturnBadRequestOnUnparticipateWhenBadId() throws Exception {
             mockMvc.perform(delete("/api/session/badId/participate/any").contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isBadRequest());
-            ;
         }
 
         @Test
