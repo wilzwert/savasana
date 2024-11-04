@@ -36,18 +36,6 @@ import static org.mockito.Mockito.*;
 @Tag("Security")
 public class JwtUtilsTest {
 
-    private static class MemoryAppender extends ListAppender<ILoggingEvent> {
-        public void reset() {
-            this.list.clear();
-        }
-
-        public boolean contains(String string, Level level) {
-            return this.list.stream()
-                    .anyMatch(event -> event.toString().contains(string)
-                            && event.getLevel().equals(level));
-        }
-    }
-
     @Autowired
     private JwtUtils jwtUtils;
 
