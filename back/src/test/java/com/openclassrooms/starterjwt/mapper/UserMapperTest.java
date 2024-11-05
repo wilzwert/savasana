@@ -68,8 +68,6 @@ public class UserMapperTest {
             users.add(user);
         }
 
-        System.out.println(users);
-
         List<UserDto> userDtos = userMapper.toDto(users);
 
         assertThat(userDtos).isNotNull();
