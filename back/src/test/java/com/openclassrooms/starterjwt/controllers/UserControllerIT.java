@@ -167,7 +167,7 @@ public class UserControllerIT {
     }
 
     @Test
-    @WithMockUser(username = "test@exmple.com", password = "abcd1234", roles = {"ADMIN"})
+    @WithMockUser(username = "test@example.com", password = "abcd1234", roles = {"ADMIN"})
     public void shouldDeleteUserWhenAuthenticationMatches() throws Exception {
         User user = new User();
         user.setId(1L);
