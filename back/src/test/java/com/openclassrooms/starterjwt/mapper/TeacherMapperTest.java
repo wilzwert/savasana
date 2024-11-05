@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,18 +30,18 @@ public class TeacherMapperTest {
     @Test
     public void testEntityToDto() {
         Teacher teacher = new Teacher();
+        teacher.setId(1L);
         teacher.setFirstName("Test");
         teacher.setLastName("Teacher");
-        teacher.setId(1L);
         teacher.setCreatedAt(LocalDateTime.now());
         teacher.setUpdatedAt(LocalDateTime.now());
 
         TeacherDto teacherDto = teacherMapper.toDto(teacher);
 
         assertThat(teacherDto).isNotNull();
+        assertThat(teacherDto.getId()).isEqualTo(teacher.getId());
         assertThat(teacherDto.getFirstName()).isEqualTo(teacher.getFirstName());
         assertThat(teacherDto.getLastName()).isEqualTo(teacher.getLastName());
-        assertThat(teacherDto.getId()).isEqualTo(teacher.getId());
         assertThat(teacherDto.getCreatedAt()).isEqualTo(teacher.getCreatedAt());
         assertThat(teacherDto.getUpdatedAt()).isEqualTo(teacher.getUpdatedAt());
     }
@@ -53,9 +51,9 @@ public class TeacherMapperTest {
         List<Teacher> teachers = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Teacher teacher = new Teacher();
+            teacher.setId((long) i);
             teacher.setFirstName("Test "+i);
             teacher.setLastName("Teacher "+i);
-            teacher.setId((long) i);
             teacher.setCreatedAt(LocalDateTime.now());
             teacher.setUpdatedAt(LocalDateTime.now());
             teachers.add(teacher);
@@ -77,18 +75,18 @@ public class TeacherMapperTest {
     @Test
     public void testDtoToEntity() {
         TeacherDto teacherDto = new TeacherDto();
+        teacherDto.setId(1L);
         teacherDto.setFirstName("Test");
         teacherDto.setLastName("Teacher");
-        teacherDto.setId(1L);
         teacherDto.setCreatedAt(LocalDateTime.now());
         teacherDto.setUpdatedAt(LocalDateTime.now());
 
         Teacher teacher = teacherMapper.toEntity(teacherDto);
 
         assertThat(teacher).isNotNull();
+        assertThat(teacher.getId()).isEqualTo(teacherDto.getId());
         assertThat(teacher.getFirstName()).isEqualTo(teacherDto.getFirstName());
         assertThat(teacher.getLastName()).isEqualTo(teacherDto.getLastName());
-        assertThat(teacher.getId()).isEqualTo(teacherDto.getId());
         assertThat(teacher.getCreatedAt()).isEqualTo(teacherDto.getCreatedAt());
         assertThat(teacher.getUpdatedAt()).isEqualTo(teacherDto.getUpdatedAt());
     }
@@ -98,9 +96,9 @@ public class TeacherMapperTest {
         List<TeacherDto> teacherDtos = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             TeacherDto teacherDto = new TeacherDto();
+            teacherDto.setId((long) i);
             teacherDto.setFirstName("Test "+i);
             teacherDto.setLastName("Teacher "+i);
-            teacherDto.setId((long) i);
             teacherDto.setCreatedAt(LocalDateTime.now());
             teacherDto.setUpdatedAt(LocalDateTime.now());
             teacherDtos.add(teacherDto);
