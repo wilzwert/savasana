@@ -111,15 +111,4 @@ public class AuthTokenFilterTest {
 
         memoryAppender.stop();
     }
-
-
-
-
-
-
-
-
-
-
-
 }

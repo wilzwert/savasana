@@ -118,7 +118,7 @@ public class SessionControllerIT {
 
         @Test
         @WithMockUser(roles = {"ADMIN"})
-        public void shouldReturnNotFountWhenNoSessionFound() throws Exception {
+        public void shouldReturnNotFountWhenSessionNotFound() throws Exception {
             when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
 
             mockMvc.perform(get("/api/session/1").contentType(MediaType.APPLICATION_JSON))
@@ -154,7 +154,7 @@ public class SessionControllerIT {
                     .andExpect(status().isOk())
                     .andReturn();
             String json = result.getResponse().getContentAsString();
-            Session createdSession = objectMapper.readValue(json, Session.class);
+            SessionDto createdSession = objectMapper.readValue(json, SessionDto.class);
             assertThat(createdSession).isNotNull();
             assertThat(createdSession.getId()).isEqualTo(session.getId());
         }
