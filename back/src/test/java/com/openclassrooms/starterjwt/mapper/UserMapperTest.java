@@ -1,13 +1,11 @@
 package com.openclassrooms.starterjwt.mapper;
 
-
 import com.openclassrooms.starterjwt.dto.UserDto;
 import com.openclassrooms.starterjwt.models.User;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UserMapperTest {
     @Autowired
     private UserMapper userMapper;
+
+    @Test
+    public void testNullEntityToDto() {
+        User user = null;
+
+        UserDto userDto = userMapper.toDto(user);
+
+        assertThat(userDto).isNull();
+    }
 
     @Test
     public void testEntityToDto() {
@@ -50,6 +57,15 @@ public class UserMapperTest {
         assertThat(userDto.isAdmin()).isEqualTo(user.isAdmin());
         assertThat(userDto.getCreatedAt()).isEqualTo(user.getCreatedAt());
         assertThat(userDto.getUpdatedAt()).isEqualTo(user.getUpdatedAt());
+    }
+
+    @Test
+    public void testNullEntityListToDto() {
+        List<User> users = null;
+
+        List<UserDto> userDtos = userMapper.toDto(users);
+
+        assertThat(userDtos).isNull();
     }
 
     @Test
@@ -83,6 +99,15 @@ public class UserMapperTest {
     }
 
     @Test
+    public void testNullDtoToEntity() {
+        UserDto userDto = null;
+
+        User user = userMapper.toEntity(userDto);
+
+        assertThat(user).isNull();
+    }
+
+    @Test
     public void testDtoToEntity() {
         UserDto userDto = new UserDto();
         userDto.setEmail("test@example.com");
@@ -105,6 +130,15 @@ public class UserMapperTest {
         assertThat(user.getPassword()).isEqualTo(userDto.getPassword());
         assertThat(user.getCreatedAt()).isEqualTo(userDto.getCreatedAt());
         assertThat(user.getUpdatedAt()).isEqualTo(userDto.getUpdatedAt());
+    }
+
+    @Test
+    public void testNullDtoListToEntity() {
+        List<UserDto> userDtos = null;
+
+        List<User> users = userMapper.toEntity(userDtos);
+
+        assertThat(users).isNull();
     }
 
     @Test

@@ -41,6 +41,37 @@ public class SessionMapperTest {
     private SessionMapper sessionMapper;
 
     @Test
+    public void testNullEntityToDto() {
+        Session session = null;
+
+        SessionDto sessionDto = sessionMapper.toDto(session);
+
+        assertThat(sessionDto).isNull();
+    }
+
+    @Test
+    public void testEntityWithoutTeacherToDto() {
+        Session session = new Session().setId(1L);
+
+        SessionDto sessionDto = sessionMapper.toDto(session);
+
+        assertThat(sessionDto).isNotNull();
+        assertThat(sessionDto.getId()).isEqualTo(session.getId());
+        assertThat(sessionDto.getTeacher_id()).isNull();
+    }
+
+    @Test
+    public void testEntityWithoutUsersToDto() {
+        Session session = new Session().setId(1L);
+
+        SessionDto sessionDto = sessionMapper.toDto(session);
+
+        assertThat(sessionDto).isNotNull();
+        assertThat(sessionDto.getId()).isEqualTo(session.getId());
+        assertThat(sessionDto.getUsers().size()).isEqualTo(0);
+    }
+
+    @Test
     public void testEntityToDto() {
         Session session = new Session()
                 .setId(1L)
@@ -63,7 +94,15 @@ public class SessionMapperTest {
         assertThat(sessionDto.getUsers()).containsExactlyElementsOf(session.getUsers().stream().map(User::getId).collect(Collectors.toList()));
         assertThat(sessionDto.getCreatedAt()).isEqualTo(session.getCreatedAt());
         assertThat(sessionDto.getUpdatedAt()).isEqualTo(session.getUpdatedAt());
+    }
 
+    @Test
+    public void testNullEntityListToDto() {
+        List<Session> sessions = null;
+
+        List<SessionDto> sessionDtos = sessionMapper.toDto(sessions);
+
+        assertThat(sessionDtos).isNull();
     }
 
     @Test
@@ -95,6 +134,40 @@ public class SessionMapperTest {
     }
 
     @Test
+    public void testNullDtoToEntity() {
+        SessionDto sessionDto = null;
+
+        Session session = sessionMapper.toEntity(sessionDto);
+
+        assertThat(session).isNull();
+    }
+
+    @Test
+    public void testDtoWithoutTeacherToEntity() {
+        SessionDto sessionDto = new SessionDto();
+        sessionDto.setName("Test session");
+        sessionDto.setId(1L);
+        Session session = sessionMapper.toEntity(sessionDto);
+
+        assertThat(session).isNotNull();
+        assertThat(session.getId()).isEqualTo(sessionDto.getId());
+        assertThat(session.getTeacher()).isNull();
+    }
+
+    @Test
+    public void testDtoWithoutUsersToEntity() {
+        SessionDto sessionDto = new SessionDto();
+        sessionDto.setName("Test session");
+        sessionDto.setId(1L);
+
+        Session session = sessionMapper.toEntity(sessionDto);
+
+        assertThat(session).isNotNull();
+        assertThat(session.getId()).isEqualTo(sessionDto.getId());
+        assertThat(session.getUsers().size()).isEqualTo(0);
+    }
+
+    @Test
     public void testDtoToEntity() {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setName("Test session");
@@ -116,6 +189,15 @@ public class SessionMapperTest {
         assertThat(session.getUpdatedAt()).isEqualTo(sessionDto.getUpdatedAt());
         assertThat(session.getTeacher().getId()).isEqualTo(sessionDto.getTeacher_id());
         assertThat(session.getUsers()).extracting(User::getId).containsExactlyElementsOf(sessionDto.getUsers());
+    }
+
+    @Test
+    public void testNullDtoListToEntity() {
+        List<SessionDto> sessionDtos = null;
+
+        List<Session> sessions = sessionMapper.toEntity(sessionDtos);
+
+        assertThat(sessions).isNull();
     }
 
     @Test

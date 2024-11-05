@@ -1,7 +1,9 @@
 package com.openclassrooms.starterjwt.mapper;
 
 
+import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.dto.TeacherDto;
+import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,6 +29,16 @@ public class TeacherMapperTest {
     @Autowired
     private TeacherMapper teacherMapper;
 
+
+    @Test
+    public void testNullEntityToDto() {
+        Teacher teacher = null;
+
+        TeacherDto teacherDto = teacherMapper.toDto(teacher);
+
+        assertThat(teacherDto).isNull();
+    }
+
     @Test
     public void testEntityToDto() {
         Teacher teacher = new Teacher();
@@ -44,6 +56,15 @@ public class TeacherMapperTest {
         assertThat(teacherDto.getLastName()).isEqualTo(teacher.getLastName());
         assertThat(teacherDto.getCreatedAt()).isEqualTo(teacher.getCreatedAt());
         assertThat(teacherDto.getUpdatedAt()).isEqualTo(teacher.getUpdatedAt());
+    }
+
+    @Test
+    public void testNullEntityListToDto() {
+        List<Teacher> teachers = null;
+
+        List<TeacherDto> teacherDtos = teacherMapper.toDto(teachers);
+
+        assertThat(teacherDtos).isNull();
     }
 
     @Test
@@ -73,6 +94,15 @@ public class TeacherMapperTest {
     }
 
     @Test
+    public void testNullDtoToEntity() {
+        TeacherDto teacherDto = null;
+
+        Teacher teacher = teacherMapper.toEntity(teacherDto);
+
+        assertThat(teacher).isNull();
+    }
+
+    @Test
     public void testDtoToEntity() {
         TeacherDto teacherDto = new TeacherDto();
         teacherDto.setId(1L);
@@ -89,6 +119,15 @@ public class TeacherMapperTest {
         assertThat(teacher.getLastName()).isEqualTo(teacherDto.getLastName());
         assertThat(teacher.getCreatedAt()).isEqualTo(teacherDto.getCreatedAt());
         assertThat(teacher.getUpdatedAt()).isEqualTo(teacherDto.getUpdatedAt());
+    }
+
+    @Test
+    public void testNullDtoListToEntity() {
+        List<TeacherDto> teacherDtos = null;
+
+        List<Teacher> teachers = teacherMapper.toEntity(teacherDtos);
+
+        assertThat(teachers).isNull();
     }
 
     @Test
