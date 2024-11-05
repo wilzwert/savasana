@@ -150,7 +150,7 @@ public class UserControllerIT {
         user.setId(1L);
         user.setFirstName("Test");
         user.setLastName("Test");
-        user.setEmail("test@examplce.com");
+        user.setEmail("test@example.com");
         user.setPassword("abcd1234");
 
         Authentication authentication = mock(Authentication.class);
