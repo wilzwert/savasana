@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
  */
 
 @ExtendWith(MockitoExtension.class)
+@Tag("Teacher")
 @Tag("TeacherService")
 @DisplayName("Testing teacher business service")
 public class TeacherServiceTest {

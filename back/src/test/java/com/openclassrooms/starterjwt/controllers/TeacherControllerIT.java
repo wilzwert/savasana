@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Tag("Integration")
+@Tag("Teacher")
 public class TeacherControllerIT {
 
     @MockBean
