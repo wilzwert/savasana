@@ -1,20 +1,16 @@
 package com.openclassrooms.starterjwt.mapper;
 
 
-import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.dto.TeacherDto;
-import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
