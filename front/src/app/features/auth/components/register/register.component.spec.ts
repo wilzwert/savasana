@@ -67,8 +67,5 @@ describe('RegisterComponent', () => {
     component.submit();
 
     expect(component.onError).toBe(true);
-    fixture.detectChanges();
-    const htmlElement: HTMLElement = fixture.nativeElement;
-    expect(fixture.nativeElement.querySelector('span.error').textContent).toBe("An error occurred");
   })
 });

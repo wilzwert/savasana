@@ -61,10 +61,10 @@ describe('FormComponent', () => {
     if(component.sessionForm) {
       expect(Object.keys(component.sessionForm.controls).length).toBe(4);
   
-      const name:FormControl = component.sessionForm?.get('name') as FormControl;
-      const date:FormControl = component.sessionForm?.get('date') as FormControl;
-      const teacher_id:FormControl = component.sessionForm?.get('teacher_id') as FormControl;
-      const description:FormControl = component.sessionForm?.get('description') as FormControl;
+      const name:FormControl = component.sessionForm.get('name') as FormControl;
+      const date:FormControl = component.sessionForm.get('date') as FormControl;
+      const teacher_id:FormControl = component.sessionForm.get('teacher_id') as FormControl;
+      const description:FormControl = component.sessionForm.get('description') as FormControl;
   
       expect(name).toBeTruthy();
       expect(date).toBeTruthy();
@@ -158,7 +158,6 @@ describe('FormComponent', () => {
 
     expect(mockSessionApiService.create).toHaveBeenCalledTimes(1);
     expect(mockSessionApiService.create).toHaveBeenCalledWith(component.sessionForm.value as Session);
-    // expect mockM
     expect(mockMatSnackBar.open).toHaveBeenCalledWith('Session created !', 'Close', { duration: 3000 });
     expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
   })
@@ -170,7 +169,6 @@ describe('FormComponent', () => {
     fixture.detectChanges();
     component.ngOnInit();
 
-    // check that onUpdate is true
     expect(mockSessionApiService.detail).toHaveBeenCalledTimes(1);
     expect(mockSessionApiService.detail).toHaveBeenCalledWith("1");
     expect(component.onUpdate).toBe(true);

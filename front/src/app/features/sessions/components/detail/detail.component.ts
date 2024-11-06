@@ -73,5 +73,4 @@ export class DetailComponent implements OnInit {
           .subscribe((teacher: Teacher) => this.teacher = teacher);
       });
   }
-
 }
