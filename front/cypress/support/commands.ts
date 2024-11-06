@@ -41,3 +41,65 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+Cypress.Commands.add('login', () => {
+    cy.visit('/login');
+  
+    cy.intercept(
+        {
+            method: 'POST',
+            url:  '/api/auth/login'
+        }, 
+        req => {
+            req.reply({
+                type: 'Bearer',
+                token: 'access_token',
+                id: 1,
+                username: 'userName',
+                firstName: 'firstName',
+                lastName: 'lastName',
+                admin: false
+              })
+        }
+    ).as('login');
+
+    cy.intercept(
+        {
+          method: 'GET',
+          url: '/api/session',
+          times: 1
+        },
+        (req) => {req.reply([]);}
+    ).as('sessions')
+  
+    cy.get('input[formControlName=email]').type("user@example.com");
+    cy.get('input[formControlName=password]').type("password{enter}{enter}");
+    cy.url().should('include', '/sessions');
+  });
+
+  Cypress.Commands.add('loginAdmin', () => {
+    cy.visit('/login');
+  
+    cy.intercept('POST', '/api/auth/login', {
+      body: {
+        type: 'Bearer',
+        token: 'access_token',
+        id: 1,
+        username: 'yoga@studio.com',
+        firstName: 'Admin',
+        lastName: 'Admin',
+        admin: true
+      }
+    }).as('login');
+
+    cy.intercept(
+        {
+          method: 'GET',
+          url: '/api/session',
+          times: 1
+        },
+        []).as('session')
+  
+    cy.get('input[formControlName=email]').type("yoga@studio.com");
+    cy.get('input[formControlName=password]').type(`test!1234{enter}{enter}`);
+    cy.url().should('include', '/sessions');
+  });

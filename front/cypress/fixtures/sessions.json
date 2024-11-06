@@ -1,0 +1,12 @@
+[
+{
+    "id": 1,
+    "name": "Beginner yoga session",
+    "date": "2024-12-01T14:30:00.000+00:00",
+    "teacher_id": 1,
+    "description": "This session allows beginners to discover yoga.",
+    "users": [1],
+    "createdAt": "2024-11-06T08:45:12",
+    "updatedAt": "2024-11-07T11:23:54"  
+}
+]
