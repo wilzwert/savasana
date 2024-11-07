@@ -11,7 +11,8 @@
     "e2e:ci": "ng run yoga:e2e-ci",
     "e2e:coverage": "npx nyc report --report-dir=coverage/e2e --reporter=lcov --reporter=text-summary",
     "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "cypress:run": "cypress run",
+    "cypress:run-record": "cypress run --record --key a8c9ee9f-e456-4189-accf-402708676ff1"
   },
   "private": true,
   "dependencies": {

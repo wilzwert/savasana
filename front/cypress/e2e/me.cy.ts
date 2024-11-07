@@ -115,8 +115,7 @@ describe("User info", () => {
 
         // we use a regexp because in some circumstances it seems a trailing slash may be added
         cy.url().should('to.match', new RegExp('^'+Cypress.config().baseUrl +'[/]*$'));
-        // cy.url().should('eq', Cypress.config().baseUrl +'/');
-        cy.contains('.mat-snack-bar-container', 'Your account has been deleted !');
+        cy.contains('.mat-snack-bar-container', 'Your account has been deleted !').should('be.visible');
         cy.contains('span.link', 'Account').should('not.exist');
         cy.contains('Login');
         cy.contains('Register');

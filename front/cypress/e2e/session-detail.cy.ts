@@ -1,12 +1,11 @@
 describe("Sessions detail", () => {
     let mockSessions: Array<any>;
     let mockSession: any;
-    let mockTeachers: Array<any>;
     let mockTeacher: any;
     
     before(() => {
-        cy.fixture('sessions.json').as('sessionsJson').then(json => {mockSessions = json; mockSession = json[0];});
-        cy.fixture('teachers.json').as('teachersJson').then(json => {mockTeachers = json; mockTeacher = json[0];});
+        cy.fixture('sessions.json').as('sessionsJson').then(json => { mockSessions = json; mockSession = json[0]; });
+        cy.fixture('teachers.json').as('teachersJson').then(json => { mockTeacher = json[0];});
     })
 
     beforeEach(() => {
