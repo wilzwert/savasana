@@ -1,0 +1,16 @@
+[
+{
+    "id": 1,
+    "lastName": "Teacher",
+    "firstName": "Test",
+    "createdAt": "2024-11-01T11:45:00",
+    "updatedAt": "2024-11-01T11:48:46"
+},
+{
+    "id": 2,
+    "lastName": "Teacher",
+    "firstName": "Other",
+    "createdAt": "2024-11-02T10:45:00",
+    "updatedAt": "2024-11-03T10:49:46"
+}
+]

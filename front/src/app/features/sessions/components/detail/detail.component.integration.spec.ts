@@ -24,8 +24,6 @@ describe('DetailComponent integration tests', () => {
   let component: DetailComponent;
   let fixture: ComponentFixture<DetailComponent>; 
   let sessionService: SessionService;
-  let sessionApiService: SessionApiService;
-  let teacherService: TeacherService;
   let router: Router;
   let matSnackBar:MatSnackBar;
   let mockHttpController: HttpTestingController;
@@ -63,8 +61,6 @@ describe('DetailComponent integration tests', () => {
     
     sessionService = TestBed.inject(SessionService);
     sessionService.logIn(mockSessionInformation as SessionInformation);
-    sessionApiService = TestBed.inject(SessionApiService);
-    teacherService =TestBed.inject(TeacherService);
     matSnackBar = TestBed.inject(MatSnackBar);
     router = TestBed.inject(Router);
     mockHttpController = TestBed.inject(HttpTestingController);
@@ -102,7 +98,7 @@ describe('DetailComponent integration tests', () => {
     expect(fixture.nativeElement.querySelector('mat-card')).toBeTruthy();
   })
 
-  it('should delete participation', () => {
+  it('should delete session', () => {
     const matSnackBarSpy = jest.spyOn(matSnackBar, 'open');
     const matNavigateSpy = jest.spyOn(router, 'navigate');
 
