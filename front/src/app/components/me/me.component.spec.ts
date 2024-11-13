@@ -50,7 +50,11 @@ describe('MeComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [MeComponent],
       imports: [
-        HttpClientTestingModule
+        HttpClientTestingModule,
+        MatCardModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
       ],
       providers: [
         { provide: SessionService, useValue: mockSessionService },
