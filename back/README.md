@@ -1,7 +1,11 @@
 # Yoga App !
 
 
-For launch and generate the jacoco code coverage:
+To launch unit tests and generate the jacoco code coverage:
 > mvn clean test
 
-GL
+To launch unit and integration tests and generate the jacoco code coverage reports:
+
+> mvn clean verify
+
+

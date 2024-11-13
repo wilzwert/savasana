@@ -4,14 +4,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Start the project
 
-Git clone:
-
-> git clone https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing
-
-Go inside folder:
-
-> cd yoga
-
 Install dependencies:
 
 > npm install
