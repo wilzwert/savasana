@@ -33,20 +33,6 @@ public class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    /*
-    @Disabled
-    @Test
-    public void shouldCreateUser() {
-        User user = new User();
-        when(userRepository.save(any(User.class))).thenReturn(user);
-
-        User createdUser = userService.create(user);
-
-        verify(userRepository).save(user);
-        assertThat(createdUser).isNotNull().isEqualTo(user);
-    }*/
-
-
     @Test
     public void shouldFindAnExistingUserByItsId() {
         User user = new User();
