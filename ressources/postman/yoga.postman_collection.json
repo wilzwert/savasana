@@ -1,43 +1,14 @@
 {
 	"info": {
-		"_postman_id": "0c536538-a112-43ba-8d4c-b28c1e3d3472",
+		"_postman_id": "e7ec097d-75ae-49d0-bf81-cd367b3fcb77",
 		"name": "yoga",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "1183177"
+		"_exporter_id": "38710569"
 	},
 	"item": [
 		{
 			"name": "auth",
 			"item": [
-				{
-					"name": "login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"yoga@studio.com\",\n    \"password\": \"test!1234\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/api/auth/login",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
 				{
 					"name": "register",
 					"request": {
@@ -62,6 +33,51 @@
 								"api",
 								"auth",
 								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Stores the authentication token and user id in collection variables\r",
+									"var authToken = pm.response.json().token;\r",
+									"var userId = pm.response.json().id;\r",
+									"pm.collectionVariables.set(\"authToken\", authToken);\r",
+									"pm.collectionVariables.set(\"userId\", userId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"toto3@toto.com\",\n    \"password\": \"test!1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
 							]
 						}
 					},
@@ -169,6 +185,20 @@
 				},
 				{
 					"name": "create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Stores the session id in a collection variable\r",
+									"var sessionId = pm.response.json().id;\r",
+									"pm.collectionVariables.set(\"sessionId\", sessionId);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -223,33 +253,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "delete",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/session/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"session",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "2"
+									"value": "{{sessionId}}"
 								}
 							]
 						}
@@ -277,11 +281,11 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "{{sessionId}}"
 								},
 								{
 									"key": "userId",
-									"value": "2"
+									"value": "{{userId}}"
 								}
 							]
 						}
@@ -309,11 +313,37 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "{{sessionId}}"
 								},
 								{
 									"key": "userId",
-									"value": "2"
+									"value": "{{userId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/session/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{sessionId}}"
 								}
 							]
 						}
@@ -344,7 +374,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "2"
+									"value": "{{userId}}"
 								}
 							]
 						}
@@ -370,7 +400,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "1"
+									"value": "{{userId}}"
 								}
 							]
 						}
@@ -385,7 +415,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5b2dhQHN0dWRpby5jb20iLCJpYXQiOjE2NjE3ODg0OTEsImV4cCI6MTY2MTg3NDg5MX0.ZIxe_D9aSVixqeeosAsI8_724qETl-eqGU_CwSEsumdd2VC0nWh6xZR2c3cWprOwaAeCMtNHp4OQUOcXkkxfEg",
+				"value": "{{authToken}}",
 				"type": "string"
 			}
 		]
@@ -408,6 +438,21 @@
 					""
 				]
 			}
+		}
+	],
+	"variable": [
+		{
+			"key": "authToken",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ5b2dhQHN0dWRpby5jb20iLCJpYXQiOjE3MzE0ODg4MTcsImV4cCI6MTczMTU3NTIxN30.WKqvatht-dMlKFmzCrMfy1ZdcS4GUArE2Alhu4F7-tUYWt0DCZ1xycvHqpmXdm6EsoBgxeNlIviFfkzMk7MXNg",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "sessionId",
+			"value": ""
 		}
 	]
 }
