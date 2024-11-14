@@ -96,6 +96,21 @@ public class JwtUtilsTest {
 
     @Test
     public void shouldValidateJwtToken() {
+        ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "testSecret");
+        ReflectionTestUtils.setField(jwtUtils, "jwtExpirationMs", 2000000);
+
+        String validToken = Jwts.builder()
+                .setSubject("testUser")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000))
+                .signWith(SignatureAlgorithm.HS512, "testSecret")
+                .compact();
+
+        assertThat(jwtUtils.validateJwtToken(validToken)).isTrue();
+    }
+
+    @Test
+    public void shouldValidateGeneratedJwtToken() {
         UserDetailsImpl testUserDetails = UserDetailsImpl.builder()
                 .id(1L)
                 .username("test@example.com")
