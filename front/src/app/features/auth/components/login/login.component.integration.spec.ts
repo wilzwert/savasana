@@ -11,7 +11,6 @@ import { expect } from '@jest/globals';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom, of} from 'rxjs';
-import { RegisterRequest } from '../../interfaces/registerRequest.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from './login.component';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
