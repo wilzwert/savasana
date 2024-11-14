@@ -14,6 +14,9 @@
     "cypress:run": "cypress run",
     "cypress:run-record": "cypress run --record --key a8c9ee9f-e456-4189-accf-402708676ff1"
   },
+  "nyc": {
+    "report-dir": "coverage/e2e"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "14.2.0",

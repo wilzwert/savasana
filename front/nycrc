@@ -9,5 +9,7 @@
     "./src/main.ts",
     "./src/test.ts",
     "**/*.conf.js"
-  ]
+  ],
+  "report-dir": "coverage/e2e",
+  "reporter": ["html", "lcov", "text-summary"]
 }
