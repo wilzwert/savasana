@@ -154,7 +154,7 @@ public class JwtUtilsTest {
 
     @Test
     public void shouldReturnFalseAndLogExpiredJwtExceptionMessage() {
-        String invalidSignatureToken = Jwts.builder()
+        String expiredToken = Jwts.builder()
                 .setSubject("testUser")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() - 1000))
@@ -162,7 +162,7 @@ public class JwtUtilsTest {
                 .compact();
 
         ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "testSecret");
-        boolean result = jwtUtils.validateJwtToken(invalidSignatureToken);
+        boolean result = jwtUtils.validateJwtToken(expiredToken);
 
         assertThat(result).isFalse();
         assertThat(memoryAppender.contains("JWT token is expired:", Level.ERROR)).isTrue();
@@ -170,12 +170,12 @@ public class JwtUtilsTest {
 
     @Test
     public void shouldReturnFalseAndLogUnsupportedJwtExceptionMessage() {
-        String invalidSignatureToken = Jwts.builder()
+        String unsupportedToken = Jwts.builder()
                 .setSubject("testUser")
                 .compact();
 
         ReflectionTestUtils.setField(jwtUtils, "jwtSecret", "testSecret");
-        boolean result = jwtUtils.validateJwtToken(invalidSignatureToken);
+        boolean result = jwtUtils.validateJwtToken(unsupportedToken);
 
         assertThat(result).isFalse();
         assertThat(memoryAppender.contains("JWT token is unsupported:", Level.ERROR)).isTrue();
