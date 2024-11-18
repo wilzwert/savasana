@@ -11,7 +11,7 @@ import { expect } from '@jest/globals';
 import { RegisterComponent } from './register.component';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { firstValueFrom, of, throwError } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { RegisterRequest } from '../../interfaces/registerRequest.interface';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LoginComponent } from '../login/login.component';
@@ -20,7 +20,6 @@ import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@an
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
-  let authService: AuthService;
   let router: Router;
   let mockHttpController: HttpTestingController;
 
@@ -48,7 +47,6 @@ describe('RegisterComponent', () => {
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
-    authService = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
     mockHttpController = TestBed.inject(HttpTestingController);
     fixture.detectChanges();

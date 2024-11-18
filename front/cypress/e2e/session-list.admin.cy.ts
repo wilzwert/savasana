@@ -46,8 +46,6 @@ describe("Sessions list actions as an admin user", () => {
         // check form initial state : pre filled with mockSession data, submit button enabled
         cy.get('form input[formControlName=name]').should('have.value', '');
         cy.get('form input[formControlName=date]').should('have.value', '');
-        // we click the already selected item to close the choices list 
-        // this is mandatory because opening the options list creates an overlay that prevents further actions on other elements
         cy.get('form [formControlName=description]').should('have.value', '');
         cy.get('button[type=submit]').should('be.disabled');
 
@@ -59,6 +57,8 @@ describe("Sessions list actions as an admin user", () => {
         cy.get('form input[formControlName=name]').type('Test session');
         cy.get('form input[formControlName=date]').type('2024-12-01');
         cy.get('button[type=submit]').should('be.disabled');
+        // we click the already selected item to close the choices list 
+        // this is mandatory because opening the options list creates an overlay that prevents further actions on other elements
         cy.get('form [formControlName=teacher_id]').click().get('mat-option').contains('Test Teacher').click();
         cy.get('button[type=submit]').should('be.disabled');
         cy.get('form [formControlName=description]').type('Test session description');
